@@ -863,7 +863,7 @@ static SRLAApiResult SRLAEncoder_EncodeRawData(
 /* Recursive Golomb-Rice符号の平均符号長 */
 static double SRLAEncoder_CalculateRGRMeanCodeLength(double mean_abs_error, uint32_t bps)
 {
-    const double intmean = mean_abs_error * (1 << (bps - 1)); /* 整数量子化した時の平均値 */
+    const double intmean = mean_abs_error * (1LL << (bps - 1)); /* 整数量子化した時の平均値 */
     const double rho = 1.0 / (1.0 + intmean);
     const uint32_t k2 = (uint32_t)SRLAUTILITY_MAX(0, SRLAUtility_Log2(log(0.5127629514) / log(1.0 - rho)));
     const uint32_t k1 = k2 + 1;
@@ -875,7 +875,7 @@ static double SRLAEncoder_CalculateRGRMeanCodeLength(double mean_abs_error, uint
 /* 幾何分布のエントロピーを計算 */
 static double SRLAEncoder_CalculateGeometricDistributionEntropy(double mean_abs_error, uint32_t bps)
 {
-    const double intmean = mean_abs_error * (1 << (bps - 1)); /* 整数量子化した時の平均値 */
+    const double intmean = mean_abs_error * (1LL << (bps - 1)); /* 整数量子化した時の平均値 */
     const double rho = 1.0 / (1.0 + intmean);
     const double invrho = 1.0 - rho;
 
@@ -1297,7 +1297,7 @@ static SRLAApiResult SRLAEncoder_EncodeCompressData(
         uint32_t p, uval;
         /* プリエンファシスフィルタのバッファ */
         uval = SRLAUTILITY_SINT32_TO_UINT32(encoder->pre_emphasis[ch][0].prev);
-        SRLA_ASSERT(uval < (1U << (header->bits_per_sample + 1)));
+        SRLA_ASSERT(uval < (1ULL << (header->bits_per_sample + 1)));
         BitWriter_PutBits(&writer, uval, header->bits_per_sample + 1);
         for (p = 0; p < SRLA_NUM_PREEMPHASIS_FILTERS; p++) {
             uval = SRLAUTILITY_SINT32_TO_UINT32(encoder->pre_emphasis[ch][p].coef);
